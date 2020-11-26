@@ -1,0 +1,187 @@
+---
+title: "Assignment 2 MATH 208  (Question 1)"
+output:
+  pdf_document: default
+  html_document: default
+---
+Prsa Yadollahi \newline
+260869949 \newline
+MATH 208 - Assignment 2\newline
+
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(fivethirtyeight)
+library(here)
+library(knitr)
+library(gridExtra)
+library(ggmosaic)
+library(ggplot2)
+library("dplyr")
+data(biopics)
+```
+
+
+a)
+```{r}
+ggplot(data=biopics, aes(x = year_release)) + 
+  geom_histogram(aes(),color="black", fill = "white",
+                position = "identity", bins = 100)
+```
+From the plot we can deduct that in general the total number of biopics released per year has increased over time based on the timeline above.
+b)
+```{r}
+ggplot(data=biopics, aes(x = year_release, group=subject_sex, fill = subject_sex)) + 
+  geom_bar(bins = 100, col="black")+ylab("Biopics")+xlab("Year")
+
+```
+
+c)
+```{r}
+biopics_by_race <- biopics %>% 
+  mutate(race=case_when(
+      subject_race=="White" ~ "White",
+      race_known=="Known"~ "Color",
+      TRUE ~ "Unknown"
+       )
+    )
+biopics_by_race[,"race"]
+
+ggplot(biopics_by_race,aes(x=year_release,group=race,fill=race)) + 
+  geom_histogram(bins=100,col="black")+ylab("Biopics")+xlab("Year")
+
+```
+
+
+d)
+
+```{r}
+ ggplot(data = biopics_by_race) +
+  geom_mosaic(aes(x=product(year_release), fill=interaction(subject_sex, race), na.rm=TRUE)) +
+  labs(title='Mosaic plot: Sex vs. Race', x="Year")
+```
+Based on the graph above. Females who are people of color are the most underrepresented
+
+e)
+```{r}
+new_biopic = 
+  as_tibble(biopics) %>% 
+  group_by(year_release) %>% 
+  mutate(count=n()) %>% 
+  mutate(
+  subject_race = 
+    ifelse(
+      is.na(subject_race),"Unknown",
+    ifelse(
+      subject_race=="White",subject_race,"Colour"
+      )
+    )
+  ) %>%
+  select(
+    year_release,
+    subject_race,
+    subject_sex,
+    count
+    ) 
+
+new_biopic_summary = new_biopic %>% 
+  group_by(
+    year_release,
+    subject_sex,
+    subject_race
+  ) %>% 
+  mutate(
+    number = n(),
+    proportion=number/count
+    ) 
+
+new_biopic_summary = new_biopic_summary[
+  order(
+    new_biopic_summary$year_release
+    ),
+  ] %>% 
+  unique(.) %>% 
+  select(
+    year_release, 
+    subject_sex,
+    subject_race,
+    number,
+    proportion
+  )
+new_biopic_summary 
+
+```
+
+
+f) i)
+```{r}
+ggplot(
+  data = new_biopic_summary, 
+  aes(
+    x=year_release,
+    y=number,
+    fill=interaction(
+      subject_sex, 
+      subject_race
+      )
+    )
+  ) + 
+  geom_point(
+    aes(
+      color=interaction(
+        subject_sex,
+        subject_race
+        )
+      )
+    ) +
+  geom_line(
+    aes(
+      color=interaction(
+        subject_sex,
+        subject_race
+        )
+      )
+    ) +
+  labs(title="Summary of gender per race", x = "Year release", y = "Count")
+```
+
+ii)
+``` {r}
+ggplot(
+  data = new_biopic_summary, 
+  aes(
+    x=year_release, 
+    y=proportion, 
+    fill=interaction(
+      subject_sex
+      )
+    )
+  ) + 
+  geom_point(
+    aes(
+      color=interaction(
+        subject_sex
+        )
+      )
+    ) +
+  geom_line(
+    aes(
+      color=interaction(
+        subject_sex
+        )
+      )
+    ) + 
+  labs(title="Relative proportions of subjects over time", x = "Year release", y = "Count") +
+  facet_wrap(~intersection(subject_race))
+```
+
+From the plots drawn above, we can conclude that the problem of imbalance is getting better.
+We note that they are all converging.
+
+
+
+
+
+
+

@@ -1,0 +1,112 @@
+---
+title: "Assignment 2 MATH 208  (Question 2)"
+output:
+  pdf_document: default
+  html_document: default
+---
+Parsa Yadollahi \newline
+260869949 \newline
+MATH 208 - Assignment 2\newline
+```{r include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(heplots)
+library("dplyr")
+```
+
+
+## Question 2
+a) 
+```{r}
+data(Diabetes)
+df_diabetes = as_tibble(Diabetes)
+df_grouped = df_diabetes %>% 
+  group_by(group) %>% 
+  summarise_all(list(
+    Avg=mean,
+    Med=median
+    )
+  ) %>% 
+  pivot_longer(
+    col=contains('_'),
+    names_to = "Measure") %>% 
+pivot_wider(
+  id_cols = Measure, 
+  names_from = group
+  ) %>%  
+  arrange(
+    desc(Measure)
+    )
+
+df_grouped
+```
+The variable that seem to differentiate amongst the different types of diabetes is glutest, intest, glufast and sspg
+
+
+b)
+```{r}
+df_test = df_diabetes %>% group_by(group)
+ggplot(df_diabetes, aes(x=glutest, y=instest, col = group)) + geom_point() +
+  labs(title="Glucose vs. Insulin Test", x="Gluetest", y="Intest")
+
+ggplot(df_diabetes, aes(x=glutest, y = sspg, col = group)) + geom_point() +
+  labs(title="Glucose vs. SSPG Test", x="Gluetest", y="SSPH")
+
+ggplot(df_diabetes, aes(x=instest, y = sspg, col = group)) + geom_point() +
+  labs(title="Insulin vs. SSPG Test", x="Gluetest", y="SSPG")
+
+```
+
+Glucose vs. SSPG test seem to return the greatest distinction looking at the plots above
+
+c)
+```{r}
+# Group data
+group_normal = df_diabetes[df_diabetes$group == "Normal",]
+group_chemical = df_diabetes[df_diabetes$group == "Chemical_Diabetic",]
+group_overt = df_diabetes[df_diabetes$group == "Overt_Diabetic",]
+
+# Histograms
+ggplot(group_normal, aes(x=glutest, y=sspg)) + geom_bin2d(bins=15) +
+labs(x="Glucose test", y="SSPG")
+
+ggplot(group_chemical, aes(x=glutest, y=sspg)) + geom_bin2d(bins=15) +
+labs(x="Glucose test", y="SSPG")
+
+ggplot(group_overt, aes(x=glutest, y=sspg)) + geom_bin2d(bins=15) +
+labs(x="Glucose test", y="SSPG")
+
+
+# contour plot
+ggplot(group_normal, aes(x=glutest,y=sspg)) + geom_density_2d(col="red") +
+  labs(x="Glucose test", y="sspg") + xlim(c(200,500)) + ylim(c(-50,350))
+
+ggplot(group_chemical, aes(x=glutest,y=sspg)) + geom_density_2d(col="red") +
+  labs(x="Glucose test", y="sspg") + xlim(c(350,650)) + ylim(c(0,350))
+
+ggplot(group_overt, aes(x=glutest,y=sspg)) + geom_density_2d(col="red") +
+  labs(x="Glucose test", y="sspg") + xlim(c(250,2000)) + ylim(c(0,600))
+
+```
+
+Yes, I find the plots provide useful summaries of the differences in the distributions.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

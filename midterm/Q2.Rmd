@@ -1,0 +1,73 @@
+---
+title: "Midterm Question 2"
+output:
+  pdf_document: default
+  html_document: default
+---
+Parsa Yadollahi \newline
+260869949 \newline
+MATH 208 - Midterm\newline
+```{r include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(heplots)
+library("dplyr")
+```
+
+
+## Question 2
+```{r}
+# a)
+# The plots that apply are 
+# A = ggplot(the_data,aes(x=qual,y=quant)) + geom_point()
+# B = ggplot(the_data,aes(x=quant)) + geom_bar() + facet_wrap(~qual)
+# D = ggplot(the_data,aes(x=quant)) + geom_hist() + facet_wrap(~qual)
+# G = ggplot(the_data,aes(x=qual,y=quant)) + geom_boxplot()
+
+```
+
+```{r}
+# (b)
+
+# (i)
+# The added code is ` + facet_wrap(~location)`
+
+# (ii)
+# The more mileage on a vehicle the less the price. These two variables 
+# are correlated since because we can see a downwards trend in price when
+# the car increases in mileage. I.e. There is a negative correlation.
+
+# (iii)
+# Yes, we can see from the graphs drawn that this downward trend is not
+# dependent on location. Each location has a similar trend where the price
+# of the car decreases when the mileage increases.
+```
+
+
+
+
+```{r}
+
+# (c)
+
+# (i)
+# A similar plot that would represent the data would be a Mosaic graph
+
+# (ii)
+# The best plot to compare distributions of models across locations is
+# the on panel (d) since this plot uses relations between the total number of cars and
+#  the  car model instead of simply using the quantity of cars
+
+# (iii)
+# Yes, Based on the plot we can see that the relative proportions of models are similar
+# across locations. We can clearly see this in panel (d) 
+
+```
+
+
+
+
+
+
+
+

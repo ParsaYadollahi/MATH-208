@@ -1,0 +1,120 @@
+---
+title: "Midterm Question 1"
+output:
+  pdf_document: default
+  html_document: default
+---
+Parsa Yadollahi \newline
+260869949 \newline
+MATH 208 - Midterm\newline
+```{r include=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(heplots)
+library("dplyr")
+```
+
+
+## Question 1
+```{r}
+Toy_Story<- list(
+  Movie=c("Toy Story","Toy Story 2","Toy Story 3","Toy Story 4"),
+  Year_of_Release=c(1995,2000,2010,2019),
+  World_Wide_Gross=c(363,487,1066,1073)
+)
+Fun_Movies <- list(
+  TS = tibble(Movie=c("Toy Story","Toy Story 4","Toy Story 3","Toy Story 2"),
+    Year_of_Release=c(1995,2019,2010,2000),
+    World_Wide_Gross=c(363,1073,1066,487)),
+  FR = tibble(Movie=c("Frozen","Frozen 2"),
+    Year_of_Release=c(2013,2019),
+    World_Wide_Gross=c(1280,1450)),
+  IJ = tibble(Movie=c("Raiders of the Lost Ark", "Kingdom of the Crystal Skull",
+    "Last Crusade","Temple of Doom"),
+    Year_of_Release = c(1981,2008,1989,1984),
+    World_Wide_Gross=c(390,790,474,333))
+)
+```
+
+
+
+```{r}
+# Question 1 (a)
+# (i) - 487
+Toy_Story[[3]][[2]]
+# (ii) - 2010
+Toy_Story[[2]][3]
+# (iii) - "character"
+class(Toy_Story[[1]])
+
+```
+
+```{r}
+# Question 1 (b)
+# (i)
+# The result that returns "Frozen 2" from the selection is
+# A and D - `Fun_Movies$FR$Movie[2]` & `Fun_Movies[2][[1]]$Movie[2]`
+Fun_Movies$FR$Movie[2]
+Fun_Movies[["FR"]][1,1]
+Fun_Movies[[c(2,1)]]
+Fun_Movies[2][[1]]$Movie[2]
+
+# (ii) - # The class returned is (B & C) tibble and list
+class(Fun_Movies[[3]][1])
+
+# (iii) - # The class returned is (A) atomic character vector
+class(Fun_Movies[[3]][[1]])
+
+
+```
+
+```{r}
+# Question 1 (c)
+
+# (i)
+IJ_only<-tibble(
+  World_Wide_Gross=c(390,333,474,790),
+  Year_of_Release=c(1981,1984,1989,2008),
+  Movie=(c("Raiders","Temple of Doom","Last Crusade","Kingdom of the Crustal Skull"))) %>%
+    mutate(Movie=factor(Movie,levels=Movie))
+ggplot(IJ_only,aes(x=Year_of_Release,y=World_Wide_Gross)) +
+  geom_line() +
+  geom_point(aes(col=Movie),size=4)
+
+# (ii)
+Fun_Movies$FR %>% summarize(
+  name = c(
+  "Number_of_films",
+  "Total_World_Wide_Gross",
+  "Average_World_Wide_Gross"
+    ), value = c(
+      2,
+      sum(World_Wide_Gross),
+      mean(World_Wide_Gross)
+    )
+  )
+
+# # (iii)
+Fun_Movies$TS
+Fun_Movies$TS %>% arrange(Year_of_Release)
+Fun_Movies$TS %>% arrange(desc(Movie))
+# According to the results above
+# The only correct answer is (B) Fun_Movies$TS %>% arrange(Year_of_Release)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

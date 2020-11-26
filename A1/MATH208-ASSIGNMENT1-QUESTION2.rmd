@@ -1,0 +1,76 @@
+---
+title: "Assignment 1 MATH 208  (Question 2)"
+output:
+  pdf_document: default
+  html_document: default
+---
+Parsa Yadollahi \newline
+260869949 \newline
+MATH 208 - Assignment 1\newline
+```{r include=FALSE}
+library(tidyverse)
+```
+
+
+## Question 2
+a) 
+```{r}
+csv_data =
+  read_csv(
+    "https://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data",
+    col_names=F)
+```
+
+
+b)
+```{r}
+names(csv_data)= 
+  c("Sex","Length","Diameter","Height",
+    "Whole weight", "Shucked weight",
+    "Viscera weight","Shell weight","Rings")
+csv_data
+```
+
+c)
+```{r}
+csv_data_radius=csv_data%>%mutate(Radius=Diameter/2)
+csv_data_radius
+```
+
+d)
+```{r}
+csv_data_groupby_sex = group_by(
+  csv_data_radius,Sex
+  )
+csv_data_groupby_sex_minmax = 
+  csv_data_groupby_sex%>%
+  summarise(
+    "Max"= max(Rings), "Min"= min(Rings)
+    )
+csv_data_groupby_sex_minmax
+```
+
+
+e)
+```{r}
+
+csv_data_weight=
+  csv_data%>%mutate(
+    "Total Weight"=`Whole weight`+`Shucked weight`
+    +`Viscera weight`+`Shell weight`)
+
+ggplot(
+  csv_data_weight,
+  aes(
+    x=Rings,
+    y=`Total Weight`,
+    group=Sex,
+    fill=Sex
+    )
+  ) + geom_bin2d(bins=50)+ labs(
+    x="Rings",
+    y="Total Weight"
+  ) + facet_wrap(~Sex)
+
+```
+We can see from the plot above that there are not much discrepancies between male and female, which leads us to deduct that the relation between the number of rings and the total weight does not depend when comparing males and females.Yet comparing the sex I, we can see that on average, they have a smaller amount of rings compared to males and females.

@@ -1,0 +1,76 @@
+---
+title: "Assignment 1 MATH 208  (Question 1)"
+output:
+  pdf_document: default
+  html_document: default
+---
+Prsa Yadollahi \newline
+260869949 \newline
+MATH 208 - Assignment 1
+
+```{r include=FALSE}
+library(tidyverse)
+```
+
+a) i) ii)
+```{r}
+data(ToothGrowth)
+mode(head(ToothGrowth))
+class(head(ToothGrowth))
+```
+
+b)
+```{r}
+nrow(head(ToothGrowth))
+ncol(head(ToothGrowth))
+head(ToothGrowth)
+```
+
+c)
+#Boxplot
+```{r}
+ggplot(ToothGrowth, aes(x=dose, y=len, fill=supp, group=supp)) +
+  geom_boxplot() +stat_boxplot(geom="errorbar",width=0.5)
+```
+# Histogram
+```{r}
+ggplot(ToothGrowth, aes(x=dose, y=len, fill=supp, group=supp)) +
+  geom_bin2d(bins=30) +
+  facet_wrap(~supp)
+```
+
+#Density plots
+```{r}
+ggplot(ToothGrowth, aes(x=dose,y=len,fill=supp,group=supp)) +
+  stat_density_2d(bins=30, aes(fill = supp),
+                  geom="polygon") +
+  ylim(c(0,50)) +
+  xlim(c(0,4)) +
+  facet_wrap(~supp)
+```
+From the plots drawn above, we can deduct that there is no supplement that is associated with greater lengths. This can be observed throughout the plots since they all show a large variation of lengths. Take, for example, the boxplot that shows a similiar distribution of lengths but not a very large difference in length or the density plot where both supplements have similar distributions.
+
+d) The density plot is more effective for assessing whether there is a difference in distribution of lengths between the OJ and VC. This is mainly because we have a larger view of the distribution making it easier to see how it is shaped. The boxplot shows a similar distribution of supplements but with less points.
+
+e)
+```{r}
+ggplot(ToothGrowth, aes(x=len, y=dose, shape = supp,
+                        group=supp, col = supp)) +
+  geom_point() + facet_wrap(~supp)
+```
+No, the association between length and dose does not depend on the  type of supplement. Take lengths 0.5, 1.0 and 2.0 that have similar distribitions of lengths for doses.
+
+
+f)
+i) len
+```{r}
+ToothGrowth %>% group_by(supp) %>%  summarise(Mean = mean(len),
+                          Median = median(len),
+                          SD=sd(len))
+```
+ii) dose
+```{r}
+ToothGrowth %>% group_by(supp) %>%  summarise(Mean = mean(dose),
+                          Median = median(dose),
+                          SD=sd(dose))
+```
