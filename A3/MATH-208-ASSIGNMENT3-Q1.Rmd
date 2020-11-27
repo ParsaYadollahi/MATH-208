@@ -13,16 +13,11 @@ MATH 208 - Assignment 3\newline
 ```{r include=FALSE}
 library(tidyverse)
 library(knitr)
-library(gridExtra)
-library(readr)
-library(dplyr)
-HTRU2 <- 
-  read_csv("./HTRU_2.csv",
+HTRU2 = read_csv("./HTRU_2.csv",
            col_names=FALSE)
-# Name the variables
 names(HTRU2) = c("Mean_IP", "SD_IP", "EK_IP", "SKW_IP",
-                 "Mean_DMSNR", "SD_DMSNR", "EK_DMSNR", "SKW_DMSNR", 
-                 "Class")
+                 "Mean_DMSNR", "SD_DMSNR", "EK_DMSNR", 
+                 "SKW_DMSNR", "Class")
 ```
 
 
@@ -32,6 +27,10 @@ logistic_Regression = function(theta, x1, x2) {
   p = 1/(1+exp(-x1*theta[1] - x2*theta[2] - theta[3]))
   return(p)
 }
+theta = c(pi, pi/2, pi/2)
+x1 = c(1,2,3)
+x2 = c(4,5,6)
+logistic_Regression(theta, x1, x2)
 ```
 
 
@@ -49,16 +48,27 @@ cross_entropy_loss = function(theta, x1, x2, y){
   }
   return(log_reg)
 }
+theta = c(pi, pi/2, pi/2)
+x1 = c(1,2,3)
+x2 = c(4,5,6)
+y = c(3, 2, 1)
+cross_entropy_loss(theta, x1, x2, y)
 ```
 
 
 (c)
 ```{r}
-loss_funct <- function(col1,col2){
-  x1_d <- c(HTRU2[[col1]])
-  x2_d <- c(HTRU2[[col2]])
-  y_d <- c(HTRU2$Class)
-  result<-optim(par=c(0,0,0), fn=cross_entropy_loss, x1=x1_d, x2=x2_d, y=y_d)
+loss_funct = function(col1,col2){
+  x1_d = c(HTRU2[[col1]])
+  x2_d = c(HTRU2[[col2]])
+  y_d = c(HTRU2$Class)
+  result = optim(
+            par=c(0,0,0),
+            fn=cross_entropy_loss,
+            x1=x1_d,
+            x2=x2_d,
+            y=y_d
+          )
 }
 
 result = loss_funct(1,5)
@@ -69,27 +79,27 @@ result
 
 (d)
 ```{r}
-var_combs<-combn(names(HTRU2[,-9]),2)
-res = NULL
-for(i in seq_along(names(HTRU2[1,]))){
+var_combs = combn(names(HTRU2[,-9]),2)
+dim(var_combs)
+result = NULL
+for(i in seq_along(names(HTRU2[,-8]))){
   for(j in 1:8){
-    if(j<=i){
+    if(j <= i){
       next
     }
     if(i == 8 & j == 8){
       break
     }
-    cross_entropy <- loss_funct(i,j)
-    cross_entropy_val <- cross_entropy$value
-    table <- tibble(
-      "col1" = var_combs[1,i],
-      "col2" = var_combs[2,i],
-      "cross entropy loss" = cross_entropy_val
+    cross_entropy = loss_funct(i,j)
+    table = tibble(
+      "column 1" = names(HTRU2)[i],
+      "column 2" = names(HTRU2)[j],
+      "cross entropy loss" = cross_entropy$value
     )
-    res = bind_rows(table,res)
+    result = bind_rows(table,result)
   }
 }
-kable(res[order(res$`cross entropy loss`),])
+kable(result[order(result$`cross entropy loss`),])
 ```
 
 (e)
@@ -110,8 +120,8 @@ loss_funct2 = function(columns){
             )
   
   table = tibble(
-    "col1" = columns[[1]],
-    "col2" = columns[[2]],
+    "column 1" = columns[[1]],
+    "column 2" = columns[[2]],
     "cross entropy loss" = result$value
   )
   return(table)

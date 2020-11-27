@@ -1,0 +1,80 @@
+---
+title: "Assignment 4 MATH 208  (Question 1)"
+output:
+  pdf_document: default
+  html_document: default
+---
+Prsa Yadollahi \newline
+260869949 \newline
+MATH 208 - Assignment 4\newline
+
+
+
+```{r include=FALSE}
+ceramic_data = dget("ceramic.txt")
+```
+
+(a)
+```{r}
+class(ceramic_data)
+```
+
+(b)
+```{r}
+medians_batch1_batch2 = apply(ceramic_data, c(5), median)
+print(medians_batch1_batch2)
+
+diff_mean_by_batch = medians_batch1_batch2[[1]] - medians_batch1_batch2[[2]]
+print(diff_mean_by_batch)
+```
+
+(c)
+```{r}
+standard_dev_all_observations = sd(c(ceramic_data[1:32]))
+print(standard_dev_all_observations)
+```
+
+(d)
+```{r}
+# Table for each of the 4 groups defined by the cross-classification
+# of Table_Speed and Direction
+table_speed = apply(ceramic_data, c(1,4), mean)
+print(table_speed)
+```
+
+(e)
+```{r}
+# Need to create a function to call apply()
+mean_diff = function(table) {
+  return(table[[1]] - table[[2]])
+}
+# horizontal diff
+apply(table_speed, 1, mean_diff)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
