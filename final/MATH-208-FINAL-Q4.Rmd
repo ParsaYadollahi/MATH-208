@@ -1,5 +1,5 @@
 ---
-title: "Final MATH 208  (Question 3)"
+title: "Final MATH 208  (Question 4)"
 output:
   pdf_document: default
   html_document: default
@@ -11,19 +11,44 @@ MATH 208 - Final \newline
 
 ```{r include=FALSE}
 library(tidyverse)
-library(here)
-library(dplyr)
-library(AER)
-library(knitr)
-library(gridExtra)
-library(operators)
 ```
 
 (A)
 ```{r}
 
+one_turn = function(init_hare, init_turt){
+  hare_probs = c(0, 5)
+  turt_probs = c(2, 4)
+  
+  init_hare = init_hare + sample(hare_probs, 1)
+  init_turt = init_turt + sample(turt_probs, 1)
+  
+  return(c(init_hare, init_turt))
+}
+```
 
 
+```{r}
+full_game = function(seed){
+  set.seed(seed)
+  hare_position = 0
+  turtoise_position = 0
+  hist = list()
+  i = 1
+  while(hare_position < 100 & turtoise_position < 100){
+    updated_positions = one_turn(hare_position, turtoise_position)
+    
+    hist[i] = list(updated_positions)
+    i = i + 1
+    hare_position = updated_positions[[1]]
+    turtoise_position = updated_positions[[2]]
+  }
+  if(hare_position >= 100){
+    return(c(winner="Hare", tibble(History=hist)))
+  }
+  return(c(winner="Turtoise", tibble(History=hist)))
+}
+full_game(123)
 ```
 
 
