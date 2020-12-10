@@ -1,0 +1,132 @@
+---
+title: "Final MATH 208  (Question 3)"
+output:
+  pdf_document: default
+  html_document: default
+---
+260869949 \newline
+Prsa Yadollahi \newline
+MATH 208 - Final \newline
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(here)
+library(dplyr)
+library(AER)
+library(knitr)
+library(gridExtra)
+library(operators)
+```
+
+(A)
+```{r}
+longest_sequence_b = function(char_vector){
+  characters = c(char_vector[1])
+  max = 0
+  for (i in 1:length(char_vector)) {
+    if (length(characters) > max) {
+      max = length((characters))
+    }
+    if (characters[length(characters)] != char_vector[i]){
+      characters = char_vector[i]
+    } else {
+      characters = c(characters, char_vector[i])
+    }
+  }
+  return(max)
+}
+vect = c("b", "c", "b", "b", "b", "d", "c", "a", "b", "b", "d", "c")
+longest_sequence_b(vect)
+```
+
+
+
+(B)
+```{r}
+longest_sequence_b_stop_char = function(char_vector, stopping_character){
+  characters = c(char_vector[1])
+  max = 0
+  for (i in 1:length(char_vector)) {
+    if (char_vector[i] == stopping_character){
+      return(NA)
+    }
+    if (length(characters) > max) {
+      max = length((characters))
+    }
+    if (characters[length(characters)] != char_vector[i]){
+      characters = char_vector[i]
+    } else {
+      characters = c(characters, char_vector[i])
+    }
+  }
+  return(max)
+}
+vect = c("b", "c", "b", "b", "b", "d", "c", "a", "b", "b", "d", "c")
+longest_sequence_b_stop_char(vect, "d")
+```
+
+(C)
+```{r}
+longest_sequence_b_target = function(char_vector, target){
+  characters = c(char_vector[1])
+  max = 0
+  for (i in 1:length(char_vector)) {
+    if (length(characters) > max) {
+      max = length((characters))
+    }
+    if (char_vector[i] != target){
+      characters = c()
+    } else {
+      characters = c(characters, char_vector[i])
+    }
+  }
+  return(max)
+}
+
+longest_run_tibble=function(char_vector,stopping_character){
+  letter<-c()
+  longest<-c()
+  for(i in letters){
+    if(i %in% char_vector){
+      letter<-c(letter,i)
+      longest<-c(longest,longest_sequence_b_target(char_vector,i))
+    }
+  }
+  if(stopping_character %in% char_vector){
+    return(tibble(letter=letter,longest=NA))
+  }
+  return(tibble(letter=letter,longest=longest))
+}
+
+longest_run_tibble(c("b", "c", "b", "d", "c", "a", "b", "b", "d","d", "c"),"f")
+```
+
+
+(D)
+```{r}
+longest_run_list<-function(char_vector,stopping_character){
+  list_result<-list()
+  for(char in stopping_character){
+    list_result<-c(list_result,longest_run_tibble(char_vector,char))
+  }
+  return(list_result)
+}
+
+tib<-longest_run_list(c("b", "c", "b", "d", "c", "a", "b", "b", "d", "c"),letters)
+length(tib)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

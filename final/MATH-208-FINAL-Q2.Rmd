@@ -1,0 +1,101 @@
+---
+title: "Final MATH 208  (Question 1)"
+output:
+  pdf_document: default
+  html_document: default
+---
+260869949 \newline
+Prsa Yadollahi \newline
+MATH 208 - Final \newline
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(here)
+library(dplyr)
+library(AER)
+library(knitr)
+library(gridExtra)
+
+```
+
+
+```{r}
+data("STAR")
+STAR <- STAR[c('stark', 'star1', 'readk', 'read1', 'read2')]
+STAR <- na.omit(STAR)
+STAR <- tibble::rowid_to_column(STAR, "student_ID")
+STAR_data = STAR
+str(STAR_data)
+STAR_data %>% slice(sample(1:n(),5))
+```
+
+(A)
+```{r}
+STAR_data %>% group_by(stark) %>% summarise(n=n(), .groups = 'drop')
+```
+
+(B)
+```{r}
+count_table = STAR_data %>% group_by(stark, star1) %>% summarise(n=n(), .groups = 'drop')
+count_table
+```
+
+(C)
+```{r}
+count_table %>% mutate(proportion=n/sum(n)) %>% select(-n)
+```
+
+(D)
+```{r}
+STAR_what <- STAR_data %>%
+  pivot_longer(cols=readk:read2,names_to="Test",values_to="Score") %>%
+  select(-student_ID)
+class(STAR_what)
+```
+
+(E)
+```{r}
+STAR_who_denom <- xtabs(~star1+Test+stark,data=STAR_what)
+STAR_who_denom[1,3,2] 
+```
+
+
+(F)
+```{r}
+STAR_who_num <- xtabs(Score~star1+Test+stark,data=STAR_what)
+STAR_avg <- STAR_who_num / STAR_who_denom
+STAR_avg
+```
+
+
+(G)
+```{r}
+avg_read2 = STAR_avg[,2,]
+avg_readk = STAR_avg[,3,]
+diff_avg_read2_readk = avg_read2 - avg_readk
+diff_avg_read2_readk
+```
+
+
+(H)
+```{r}
+STAR_what %>% 
+  group_by(star1, stark, Test) %>% 
+  summarise(new = sum(Score)/n(), .groups = 'drop') %>% 
+  pivot_wider(names_from = Test,values_from = new) %>% 
+  mutate(new = read2 - readk) %>% 
+  select(star1, stark, new) %>% 
+  pivot_wider(names_from = stark,values_from = new)
+```
+
+
+
+
+
+
+
+
+
+
+

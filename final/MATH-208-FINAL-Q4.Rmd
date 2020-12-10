@@ -1,0 +1,41 @@
+---
+title: "Final MATH 208  (Question 3)"
+output:
+  pdf_document: default
+  html_document: default
+---
+260869949 \newline
+Prsa Yadollahi \newline
+MATH 208 - Final \newline
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(here)
+library(dplyr)
+library(AER)
+library(knitr)
+library(gridExtra)
+library(operators)
+```
+
+(A)
+```{r}
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
