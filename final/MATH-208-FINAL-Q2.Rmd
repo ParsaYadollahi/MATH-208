@@ -10,15 +10,18 @@ MATH 208 - Final \newline
 
 
 ```{r include=FALSE}
-library(tidyverse)
-library(here)
 library(dplyr)
 library(AER)
 library(knitr)
+library(tidyverse)
+library(fivethirtyeight)
+library(here)
+library(knitr)
 library(gridExtra)
-
+library(ggmosaic)
+library(ggplot2)
+library("dplyr")
 ```
-
 
 ```{r}
 data("STAR")
@@ -32,62 +35,80 @@ STAR_data %>% slice(sample(1:n(),5))
 
 (A)
 ```{r}
-STAR_data %>% group_by(stark) %>% summarise(n=n(), .groups = 'drop')
+# plot 1: barplot
+# plot 2: mosaicplot
+p1<-ggplot(STAR_data,aes(x=star1,fill=stark)) + geom_bar() +
+  scale_fill_viridis_d() + ggtitle("Plot 1") + theme_bw()
+
+p2<-ggplot(STAR_data) +   geom_mosaic(aes(x=product(stark,star1),fill=stark))+
+  scale_fill_viridis_d() + ggtitle("Plot 2")+ theme_bw()
+grid.arrange(grobs=list(p1,p2),nrow=2,ncol=1)
 ```
+
+
 
 (B)
-```{r}
-count_table = STAR_data %>% group_by(stark, star1) %>% summarise(n=n(), .groups = 'drop')
-count_table
-```
+Students are most likely going to have also been in either of the two kindergarten classes, given that they are in either a regular or regular-aide grade 1 class. But, they are most likely to have also been in the small kindergarten class, given that a student is in a small grade 1 class.
 
 (C)
-```{r}
-count_table %>% mutate(proportion=n/sum(n)) %>% select(-n)
-```
+The two differences are the following:
+* The first being that both the x and y axes in mosaic plot (Plot 2) are qualitative variables whereas the bar plot (plot 1) contains qualitative x axis and quantitative y axis
+* The second difference is that the mosaic plot (plot 2) represents values by ratio/proportion. Whereas the bar plot (plot 1) represents values by their counts.
+
 
 (D)
 ```{r}
-STAR_what <- STAR_data %>%
-  pivot_longer(cols=readk:read2,names_to="Test",values_to="Score") %>%
-  select(-student_ID)
-class(STAR_what)
+merge_vec = function(vec) {
+  factor(
+   vec,
+   levels = c("regular", "small", "regular+aide"),
+   labels = c("not small", "small", "not small")
+  )
+}
+merged_plot = STAR_data %>%
+  mutate(
+   STAR_data,
+   stark_mod = merge_vec(STAR_data$stark),
+   star1_mod = merge_vec(STAR_data$star1),
+   stark = NULL,
+   star1 = NULL
+  )
 ```
 
 (E)
 ```{r}
-STAR_who_denom <- xtabs(~star1+Test+stark,data=STAR_what)
-STAR_who_denom[1,3,2] 
+ggplot(merged_plot,aes(x = star1_mod,fill = stark_mod,y=read1)) +
+geom_boxplot() + ggtitle("Plot e") + theme_bw()
 ```
-
 
 (F)
 ```{r}
-STAR_who_num <- xtabs(Score~star1+Test+stark,data=STAR_what)
-STAR_avg <- STAR_who_num / STAR_who_denom
-STAR_avg
+plot_f = with(STAR_data, ggplot
+              (merged_plot,
+                aes(
+                  x = star1_mod,
+                  y = read1,
+                  fill = star1_mod
+                  )) +
+                geom_boxplot() +
+                ggtitle("Plot f"))
+plot_f
 ```
-
+I created plot F to help visualize the question better.
+Based on both plots E and F above, I believe that there is a strong correlation between the modified types of class variables and the grade 1 reading test scores. For example, plot F shows a comparison between the class variables and the grade 1 reading scores. We can notice a difference in the mdeian value is bigger in the small class compared to the not small class.
 
 (G)
-```{r}
-avg_read2 = STAR_avg[,2,]
-avg_readk = STAR_avg[,3,]
-diff_avg_read2_readk = avg_read2 - avg_readk
-diff_avg_read2_readk
-```
-
+* Panel g1: geom point plot
+* Panel g2: density2d plot
 
 (H)
-```{r}
-STAR_what %>% 
-  group_by(star1, stark, Test) %>% 
-  summarise(new = sum(Score)/n(), .groups = 'drop') %>% 
-  pivot_wider(names_from = Test,values_from = new) %>% 
-  mutate(new = read2 - readk) %>% 
-  select(star1, stark, new) %>% 
-  pivot_wider(names_from = stark,values_from = new)
-```
+Looking at g1 and g2, we notice that there is a correlation between readk and read1. There is a linear association. For example, as readk increases, so does read1. The association does not vary by much between the modified kindergarten class type variables. In both class types, the line of best fit has a similar slope.
+
+(I)
+* A: Line chart
+* B: 2-d density plot
+* D: 2-d histogram
+
 
 
 

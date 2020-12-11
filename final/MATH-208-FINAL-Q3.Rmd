@@ -107,8 +107,10 @@ longest_run_tibble(c("b", "c", "b", "d", "c", "a", "b", "b", "d","d", "c"),"f")
 ```{r}
 longest_run_list<-function(char_vector,stopping_character){
   list_result<-list()
-  for(char in stopping_character){
-    list_result<-c(list_result,longest_run_tibble(char_vector,char))
+  index = 1
+  for (letter in letters) {
+    list_result[[index]] = longest_run_tibble(char_vector, letter)
+    index = index + 1
   }
   return(list_result)
 }

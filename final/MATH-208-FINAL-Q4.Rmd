@@ -48,7 +48,6 @@ full_game = function(seed){
   }
   return(c(winner="Turtoise", tibble(History=hist)))
 }
-full_game(123)
 ```
 
 
